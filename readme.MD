@@ -1,4 +1,4 @@
-# create-3np-stack
+# create-3np-app
 
 An npm package for full stack web development project.
 
@@ -10,8 +10,8 @@ You can use the project in this way:
 
 ```bash
 # with npm
-npm install create-3np-stack
+npm install create-3np-app
 
 # with yarn
-yarn add create-3np-stack
+yarn add create-3np-app
 ```
