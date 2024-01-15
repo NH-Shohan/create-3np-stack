@@ -8,10 +8,13 @@ You can use the project in this way:
 
 ### Install
 
-```bash
-# with npm
-npm install create-3np-app
 
-# with yarn
+## with npm
+```
+npm install create-3np-app
+```
+
+## with yarn
+```
 yarn add create-3np-app
 ```
