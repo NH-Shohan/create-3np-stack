@@ -1,4 +1,4 @@
-# create-3np-stack
+# create-3np-app
 
 An npm package for full stack web development project.
 
