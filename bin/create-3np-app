@@ -1,0 +1,103 @@
+#!/usr/bin/env node
+import { execSync } from "child_process";
+import fs from "fs";
+import path from "path";
+
+const __filename = new URL(import.meta.url).pathname;
+const __dirname = path.dirname(__filename);
+
+const buildProject = (directory) => {
+  try {
+    if (directory.includes("frontend")) {
+      console.log(`Building frontend in ${directory}...`);
+      execSync("npm run build", { cwd: directory, stdio: "inherit" });
+      console.log("Frontend build completed successfully!");
+    } else if (directory.includes("backend")) {
+      console.log(`Building backend in ${directory}...`);
+      execSync("npm run build", { cwd: directory, stdio: "inherit" });
+      console.log("Backend build completed successfully!");
+    }
+  } catch (error) {
+    console.error(
+      `Error building project in ${directory}:`,
+      error.message || error
+    );
+    process.exit(1);
+  }
+};
+
+const createApp = (appName) => {
+  if (!appName) {
+    console.log("Please provide an app name: ");
+    process.stdin.once("data", (input) => {
+      const userInput = input.toString().trim();
+      createApp(userInput);
+    });
+    return;
+  }
+
+  const templatesDir = path.join(__dirname, "../templates");
+
+  try {
+    fs.mkdirSync(`./${appName}/frontend`, { recursive: true });
+    console.log("Frontend folder created successfully!");
+    fs.mkdirSync(`./${appName}/backend`, { recursive: true });
+    console.log("Backend folder created successfully!");
+
+    copyTemplates(path.join(templatesDir, "frontend"), `./${appName}/frontend`);
+    copyTemplates(path.join(templatesDir, "backend"), `./${appName}/backend`);
+
+    installDependencies(`./${appName}/frontend`);
+    installDependencies(`./${appName}/backend`);
+
+    buildProject(`./${appName}/frontend`);
+    buildProject(`./${appName}/backend`);
+
+    const appName = "Hello";
+
+    console.log(`\nApp "${appName}" created successfully!`);
+    console.log(
+      `\n\nTo start working on your project, navigate to the project directory and open your project in your preferred code editor by running:`
+    );
+    console.log(`\n\tcd ${appName}`);
+    console.log(`\tcode . `);
+    console.log(`\n# or replace "code" with the command for your code editor`);
+  } catch (error) {
+    console.error("Error creating app:", error.message || error);
+    process.exit(1);
+  }
+};
+
+const copyTemplates = (sourceDir, destinationDir) => {
+  const templateFiles = fs.readdirSync(sourceDir);
+
+  for (const file of templateFiles) {
+    if (file !== "node_modules") {
+      const sourcePath = path.join(sourceDir, file);
+      const destinationPath = path.join(destinationDir, file);
+
+      if (fs.statSync(sourcePath).isDirectory()) {
+        copyTemplates(sourcePath, destinationPath);
+      } else {
+        fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
+        fs.copyFileSync(sourcePath, destinationPath);
+      }
+    }
+  }
+};
+
+const installDependencies = (directory) => {
+  try {
+    console.log(`Installing dependencies in ${directory}...`);
+    execSync("npm install", { cwd: directory, stdio: "inherit" });
+  } catch (error) {
+    console.error(
+      `Error installing dependencies in ${directory}:`,
+      error.message || error
+    );
+    process.exit(1);
+  }
+};
+
+const appName = process.argv[2];
+createApp(appName);

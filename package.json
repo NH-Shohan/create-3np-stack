@@ -1,22 +1,30 @@
 {
-  "name": "create-3np-app",
-  "version": "1.0.0",
+  "name": "create-3np-stack",
+  "version": "0.0.1",
+  "main": "index.js",
   "type": "module",
-  "description": "An npm package for full stack web development project",
-  "bin": "index.js",
-  "keywords": [
-    "node",
-    "nextJS",
-    "nestJS",
-    "postgresql"
-  ],
-  "author": "Nahim Hossain Shohan",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/NH-Shohan/create-3np-stack"
+  "bin": {
+    "create-3np-stack": "./dist/create-3np-stack"
   },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "repository": "https://github.com/NH-Shohan/create-3np-stack",
   "bugs": {
     "url": "https://github.com/NH-Shohan/create-3np-stack/issues"
+  },
+  "author": "Nahim Hossain Shohan <nh.shohan6@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "NextJS",
+    "NestJS",
+    "NodeJS",
+    "Postgresql",
+    "3np",
+    "Full Stack"
+  ],
+  "devDependencies": {
+    "rollup": "^4.9.5",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }

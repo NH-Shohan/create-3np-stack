@@ -6,12 +6,10 @@ An npm package for full stack web development project.
 
 You can use the project in this way:
 
-### Install
+## Installation
 
 ```bash
-# with npm
-npm install create-3np-stack
-
-# with yarn
-yarn add create-3np-stack
+npx create-3np-stack project-name
 ```
+
+Here replace your app name with `project-name` and your are ready to enjoy.
