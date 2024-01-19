@@ -6,20 +6,29 @@ import path from "path";
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
-const buildProject = (directory) => {
+const colors = {
+  green: "\x1b[32m",
+  red: "\x1b[31m",
+  yellow: "\x1b[33m",
+  reset: "\x1b[0m",
+};
+
+const colorize = (text, color) => `${colors[color]}${text}${colors.reset}`;
+
+const buildProject = (directory, color) => {
   try {
     if (directory.includes("frontend")) {
-      console.log(`Building frontend in ${directory}...`);
+      console.log(colorize(`Building frontend in ${directory}...`, color));
       execSync("npm run build", { cwd: directory, stdio: "inherit" });
-      console.log("Frontend build completed successfully!");
+      console.log(colorize("Frontend build completed successfully!", color));
     } else if (directory.includes("backend")) {
-      console.log(`Building backend in ${directory}...`);
+      console.log(colorize(`Building backend in ${directory}...`, color));
       execSync("npm run build", { cwd: directory, stdio: "inherit" });
-      console.log("Backend build completed successfully!");
+      console.log(colorize("Backend build completed successfully!", color));
     }
   } catch (error) {
     console.error(
-      `Error building project in ${directory}:`,
+      colorize(`Error building project in ${directory}:`, "red"),
       error.message || error
     );
     process.exit(1);
@@ -40,9 +49,9 @@ const createApp = (appName) => {
 
   try {
     fs.mkdirSync(`./${appName}/frontend`, { recursive: true });
-    console.log("Frontend folder created successfully!");
+    console.log(colorize("Frontend folder created successfully!", "green"));
     fs.mkdirSync(`./${appName}/backend`, { recursive: true });
-    console.log("Backend folder created successfully!");
+    console.log(colorize("Backend folder created successfully!", "green"));
 
     copyTemplates(path.join(templatesDir, "frontend"), `./${appName}/frontend`);
     copyTemplates(path.join(templatesDir, "backend"), `./${appName}/backend`);
@@ -50,20 +59,29 @@ const createApp = (appName) => {
     installDependencies(`./${appName}/frontend`);
     installDependencies(`./${appName}/backend`);
 
-    buildProject(`./${appName}/frontend`);
-    buildProject(`./${appName}/backend`);
+    buildProject(`./${appName}/frontend`, "yellow");
+    buildProject(`./${appName}/backend`, "yellow");
 
-    const appName = "Hello";
-
-    console.log(`\nApp "${appName}" created successfully!`);
+    console.log(colorize(`\nApp "${appName}" created successfully!`, "green"));
     console.log(
-      `\n\nTo start working on your project, navigate to the project directory and open your project in your preferred code editor by running:`
+      colorize(
+        `\n\nTo start working on your project, navigate to the project directory and open your project in your preferred code editor by running:`,
+        "green"
+      )
     );
-    console.log(`\n\tcd ${appName}`);
-    console.log(`\tcode . `);
-    console.log(`\n# or replace "code" with the command for your code editor`);
+    console.log(colorize(`\n\tcd ${appName}`, "green"));
+    console.log(colorize(`\tcode . `, "green"));
+    console.log(
+      colorize(
+        `\n# or replace "code" with the command for your code editor`,
+        "green"
+      )
+    );
   } catch (error) {
-    console.error("Error creating app:", error.message || error);
+    console.error(
+      colorize("Error creating app:", "red"),
+      error.message || error
+    );
     process.exit(1);
   }
 };
@@ -88,11 +106,13 @@ const copyTemplates = (sourceDir, destinationDir) => {
 
 const installDependencies = (directory) => {
   try {
-    console.log(`Installing dependencies in ${directory}...`);
+    console.log(
+      colorize(`Installing dependencies in ${directory}...`, "yellow")
+    );
     execSync("npm install", { cwd: directory, stdio: "inherit" });
   } catch (error) {
     console.error(
-      `Error installing dependencies in ${directory}:`,
+      colorize(`Error installing dependencies in ${directory}:`, "red"),
       error.message || error
     );
     process.exit(1);
